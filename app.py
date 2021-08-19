@@ -8,16 +8,20 @@ SECRET_KEY = "anbubu"
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-def conect_db():
-    return sqlite3.connect(app.confg['DATABASE'])
+def conectar_bd():
+    return sqlite3.connect(app.config['DATABASE'])
 
 @app.before_request
-def before_req():
-    g.db = conect_db()
+def antes_requisicao():
+    g.bd = conectar_bd()
 
 @app.teardown_request
-def after_req():
-    g.db.close()
+def depois_request(exc):
+    g.bd.close()
+
+@app.route('/entradas')
+def show_msg():
+    return render_template('exibir_entradas.html')
 
 #passa pra ele uma string que vai ser a url, e ele linkara ela com uma função de python
 @app.route('/hello')
